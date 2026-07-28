@@ -12,15 +12,15 @@ def load_gold() -> None:
     """
     Load data from SQL Database
     """
-    tables = [('dim_customer', 'customer'), ('dim_product', 'product'), ('fact_sales', 'sales')]
+    tables = ['dim_customer', 'dim_product', 'fact_sales']
 
-    for tbl, tbl_name in tables:
-        df = pd.read_sql(f"SELECT * FROM {tbl}", con=engine)
-        df.to_csv(f"data/gold/{tbl_name}.csv", index=False)
+    for tbl_name in tables:
+        df = pd.read_sql(f"SELECT * FROM {tbl_name}", con=engine)
+        df.to_csv(f"data/{tbl_name}.csv", index=False)
    
 def create_date_table() -> None:
 
-    sales = pd.read_csv(r"data/gold/sales.csv", parse_dates=['order_date'])
+    sales = pd.read_csv(r"data/fact_sales.csv", parse_dates=['order_date'])
     start_date:str = sales['order_date'].min()
     end_date:str = sales['order_date'].max()
 
@@ -38,7 +38,7 @@ def create_date_table() -> None:
     df['day_name'] = df['full_date'].dt.day_name() #type: ignore
     df['is_weekend'] = df['day_name'].isin(['Saturday', 'Sunday'])
 
-    df = df.to_csv(r"data\dim\dim_date.csv", index=False)
+    df = df.to_csv(r"data\dim_date.csv", index=False)
 
 def main():
     load_gold()

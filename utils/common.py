@@ -35,10 +35,10 @@ def format_number(value):
 
 def fact_sales() -> pd.DataFrame:
     root = Path(__file__).resolve().parents[1]
-    sales = pd.read_csv(root / 'data' / 'gold' / 'sales.csv')
-    customer = pd.read_csv(root / 'data' / 'gold' / 'customer.csv')
-    product = pd.read_csv(root / 'data' / 'gold' / 'product.csv')
-    dim_date = pd.read_csv(root / 'data' / 'dim' / 'dim_date.csv')
+    sales = pd.read_csv(root / 'data' / 'fact_sales.csv')
+    customer = pd.read_csv(root / 'data' / 'dim_customer.csv')
+    product = pd.read_csv(root / 'data' / 'dim_product.csv')
+    dim_date = pd.read_csv(root / 'data' / 'dim_date.csv')
 
     df = sales.merge(customer, on='customer_key', how='left')
     df = df.merge(product, on='product_key', how='left')
@@ -52,13 +52,13 @@ def fact_sales() -> pd.DataFrame:
     return standardize_dates(df, ['order_date', 'ship_date', 'delivery_date'])
 
 def customer() -> pd.DataFrame:
-    df = pd.read_csv(r'data/gold/customer.csv')
+    df = pd.read_csv(r'data/dim_customer.csv')
     df['created_at'] = pd.to_datetime(df['created_at'])
     df['login_year'] = df['created_at'].dt.year
     return df
 
 def product() -> pd.DataFrame:
-    df = pd.read_csv(r'data/gold/product.csv')
+    df = pd.read_csv(r'data/dim_product.csv')
     df['added_at'] = pd.to_datetime(df['added_date'])
     df['prd_added_year'] = pd.to_datetime(df['added_at']).dt.year
     return df
